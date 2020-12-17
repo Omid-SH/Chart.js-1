@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Major Minor Tick Styling</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    
+	<style>
+	canvas {
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-ms-user-select: none;
+	}
+	</style>
+</head>
+
+<body>
+    <h1 style="text-align: center;">Major Minor Tick Styling</h1>
+	<div >
+        <canvas id="canvas"></canvas>
+	</div>
+	
+	<script>
+
+        var labels = [], data = [];
+        for(i=1; i<10; i++)
+        {
+            var rand = 35+Math.floor(Math.random()*10); 
+            time = moment(moment.now()).add(rand+i*60, 'minutes');
+
+            labels.push(time.format('YYYY-MM-DD HH:mm'));
+            data.push(Math.sin(rand));
+        }
+
+        // chart config
+		var config1 = {
+            type: 'line',
+			data: {
+                labels: labels,
+				datasets: [{
+                    label: 'My First dataset',
+                    type: 'line',
+					data: data,
+                    fill: false,
+                }],
+			},
+			options: {
+                title: {
+                display: true,
+                text: 'Both major and Minor'
+                },
+                scales: {
+                    ticks:{
+                        major: {
+                            fontSize: 14,
+                            fontStyle: "bold",
+                            fontColor: 'gray',
+                        },
+                        minor:{
+                            enabled: true,
+                            fontColor: 'yellow',
+                            fontSize: 20,
+                        },
+                        callback: function(value, index, values) {
+                            if(values[index] !== undefined)
+                            {
+                                if(values[index].major==true)
+                                {
+                                    return moment(values[index].value).format('DD/MM');
+                                }
+                                else
+                                {
+                                    return value;
+                                }
+                            }
+                        }
+                    },
+                    yAxes: [{
+                        ticks: {
+                            min: -2,
+                            minor:{
+                                enabled: true,
+                                fontColor: 'green',
+                                fontSize: 20,
+
+                            },
+                            major: {
+                                enabled: true,
+                                fontStyle: 'bold',
+                                fontColor: 'blue'
+                            }
+                        }
+                    }]
+                }
+            }
+		};
+      
+        window.onload = function() {
+			var ctx = document.getElementById('canvas').getContext('2d');
+			window.myLine = new Chart(ctx, config1);
+        };
+
+	</script>
+</body>
+
+</html>
