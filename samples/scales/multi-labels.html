@@ -1,0 +1,134 @@
+<!--Author: AmirHoseinRostami(gitHubId:AHReccese)-->
+
+<!doctype html>
+<html>
+
+<head>
+    <title>Line Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+	<style>
+	canvas{
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-ms-user-select: none;
+	}
+	</style>
+</head>
+
+<body>
+	<div style="width:90%;">
+		<canvas id="canvas"></canvas>
+	</div>
+	<script>
+		var randomScalingFactor = function() {
+			return Math.round(Math.random() * 100);
+        };
+
+        var newLegendClickHandler = function (e, legendItem) {
+            var index = legendItem.datasetIndex;
+
+            if (index > 1) {
+                // Do the original logic
+                defaultLegendClickHandler(e, legendItem);
+            } else {
+                let ci = this.chart;
+                [
+                    ci.getDatasetMeta(0),
+                    ci.getDatasetMeta(1)
+                ].forEach(function(meta) {
+                    meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
+                });
+                ci.update();
+            }
+        };
+
+		var config = {
+			type: 'line',
+			data: {
+				labels: [['June', '2015'], 'July', 'August', 'September', 'October', 'November', 'December', ['January', '2016'], 'February', 'March', 'April', 'May'],
+				datasets: [{
+					label: 'My First dataset',
+					fill: false,
+					backgroundColor: '#ff0000', // red
+					borderColor: '#ff0000', // red
+					data: [
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor()
+					]
+				}, {
+					label: 'My Second dataset',
+					fill: false,
+					backgroundColor: '#0000ff', // blue
+					borderColor: '#0000ff', // blue
+					data: [
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor()
+					],
+				}]
+			},
+			options: {
+				responsive: true,
+				title: {
+					display: true,
+					text: 'Chart with Multiline Labels'
+                },
+                legend: {
+                    labels: {
+                        // Width of coloured box.
+                        boxWidth: 80,
+                        // setting the color of label.
+                        fontColor: '#8833DB',
+                        // setting the fontFamily of label.
+                        fontFamily: 'Helvetica Neue',
+                        // setting the fontSize of label.
+                        fontSize: 20,
+                        // setting the fontStyle of label.
+                        fontStyle: 'italic',
+                        // Padding between rows of colored boxes
+                        // (look at the distance between
+                        // 'title' and 'legendLabels in chart').
+                        padding: 50,
+
+                        // Label style will match corresponding point style
+                        // for example:
+                        // if point's style is circle,label's style would be circle too.
+                        usePointStyle: true
+                    },
+
+                    // custom legendListner in order to
+                    // link the display of the first two datasets
+                    onClick: newLegendClickHandler,
+                    
+                }
+            },
+
+        };
+
+		window.onload = function() {
+			var ctx = document.getElementById('canvas').getContext('2d');
+            var myChart = new Chart(ctx, config);          
+		};
+	</script>
+</body>
+
+</html>
